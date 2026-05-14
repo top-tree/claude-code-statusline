@@ -1,0 +1,17 @@
+{
+  "model": {"display_name": "deepseek-v4-pro [1m]"},
+  "effort": {"level": "medium"},
+  "context_window": {
+    "total_input_tokens": 50000,
+    "context_window_size": 200000,
+    "current_usage": {
+      "cache_read_input_tokens": 23424,
+      "input_tokens": 23831,
+      "cache_creation_input_tokens": 17,
+      "output_tokens": 510
+    }
+  },
+  "workspace": {"current_dir": "/home/top_tree/project"},
+  "session_id": "fixture-session",
+  "transcript_path": "tests/fixtures/transcript_session.jsonl"
+}

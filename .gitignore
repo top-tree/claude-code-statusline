@@ -1,0 +1,20 @@
+# Runtime state
+sessions/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test and coverage output
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local environments and editor files
+.env
+.venv/
+venv/
+*.log
+.DS_Store
