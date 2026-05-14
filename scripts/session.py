@@ -3,8 +3,8 @@ from contextlib import contextmanager
 import fcntl
 import json
 import os
-import glob
 import shutil
+from pathlib import Path
 
 from . import SESSIONS
 
@@ -135,10 +135,10 @@ def _transcript_paths(transcript_path):
     if ext != ".jsonl":
         return
 
-    subagents = os.path.join(base, "subagents", "*.jsonl")
-    for path in sorted(glob.glob(subagents)):
-        if os.path.isfile(path):
-            yield path
+    subagents = Path(base, "subagents")
+    for path in sorted(subagents.glob("*.jsonl")):
+        if path.is_file():
+            yield str(path)
 
 
 def _records_from_transcripts(transcript_paths):

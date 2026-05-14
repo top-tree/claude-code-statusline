@@ -384,6 +384,30 @@ def test_transcript_sync_includes_subagent_usage(isolated_sessions, tmp_path):
     assert summary["total_cost"] == pytest.approx(0.0005624)
 
 
+def test_transcript_sync_includes_subagent_usage_when_path_contains_glob_metacharacters(isolated_sessions, tmp_path):
+    project_dir = tmp_path / "project[one]"
+    transcript = write_transcript(project_dir / "sid.jsonl", [
+        assistant_line("main-pro", "deepseek-v4-pro", 100, 0, 0, 10),
+    ])
+    write_transcript(project_dir / "sid" / "subagents" / "agent-1.jsonl", [
+        assistant_line("sub-flash", "deepseek-v4-flash", 20, 0, 5, 6),
+    ])
+
+    summary = session.get_summary("sid", str(transcript), {"pricing": {}})
+
+    assert [row["message_id"] for row in read_jsonl(log_path(isolated_sessions))] == [
+        "main-pro",
+        "sub-flash",
+    ]
+    assert summary["models"] == {
+        "deepseek-v4-pro": {"cached": 0, "new": 100, "output": 10},
+        "deepseek-v4-flash": {"cached": 5, "new": 20, "output": 6},
+    }
+    assert summary["total_cached"] == 5
+    assert summary["total_new"] == 120
+    assert summary["total_output"] == 16
+
+
 def test_transcript_sync_deduplicates_message_ids_across_main_and_subagents(isolated_sessions, tmp_path):
     project_dir = tmp_path / "project"
     transcript = write_transcript(project_dir / "sid.jsonl", [
